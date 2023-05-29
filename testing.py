@@ -18,7 +18,7 @@ while running:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill((67,205,226))
+    screen.fill(0,0,0)
 
     pygame.draw.circle(screen, (23,100,212), player_pos, 40)
 
