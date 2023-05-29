@@ -21,7 +21,7 @@ def mainmenu():
         #pygame.draw.rect(window_surface, BLACK, text_box_rect, 2)
         text_surface = font.render("Tournament Bracket Automation", True, BLACK)
         window_surface.blit(text_surface, (35, 100))
-        
+        pygame.draw.rect(window_surface, BLACK, [1536, 864, 568, 568], 10) #wip
         pygame.display.update()
     
     pygame.quit()
