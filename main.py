@@ -196,6 +196,7 @@ def join_menu(surface):
         PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 260))
         surface.blit(PLAY_TEXT, PLAY_RECT)
         # Name input based on amount of players per team
+        
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
