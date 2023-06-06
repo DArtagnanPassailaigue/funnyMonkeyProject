@@ -1,33 +1,44 @@
 import pygame, sys
 from button import Button
     
-def main_menu_screen(surface, font1, font2):
+def main_menu_screen(surface):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
-    surface.fill(WHITE)
-    titleblock = font1.render("Tournament Bracket Automation", True, BLACK)
-    surface.blit(titleblock, (35, 100))
-    pygame.draw.rect(surface, BLACK, [0, 0, 1280, 720], 15)
-    pygame.draw.rect(surface, BLACK, [0, 0, 50, 50], 10)
-    pygame.draw.rect(surface, BLACK, [1230, 0, 50, 50], 10)
-    pygame.draw.rect(surface, BLACK, [0, 670, 50, 50], 10)
-    pygame.draw.rect(surface, BLACK, [1230, 670, 50, 50], 10)
-    # Host rectangle 
-    click_host = host_button(surface, font2)  # Assign the menu state returned by the function
-    # Join rectangle
-    click_join = join_button(surface, font2)  # Assign the menu state returned by the function
-    # Quit rectangle
-    click_quit = quit_button(surface, font2)
-    if click_host:
-        host_menu(surface, font1)
-    elif click_join:
-        join_menu(surface, font1)
-    elif click_quit:
-        pygame.quit()
-        sys.exit()
+    while True:
+
+        surface.fill(WHITE)
+
+        menu_text = font1.render("Tournament Bracket Automation", True, BLACK)
+        pygame.draw.rect(surface, BLACK, [0, 0, 1280, 720], 15)
+        pygame.draw.rect(surface, BLACK, [0, 0, 50, 50], 10)
+        pygame.draw.rect(surface, BLACK, [1230, 0, 50, 50], 10)
+        pygame.draw.rect(surface, BLACK, [0, 670, 50, 50], 10)
+        pygame.draw.rect(surface, BLACK, [1230, 670, 50, 50], 10)
+        surface.blit(menu_text, (37, 100))
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        # Host rectangle 
+        click_host = host_button(surface)  # Assign the menu state returned by the function
+        # Join rectangle
+        click_join = join_button(surface)  # Assign the menu state returned by the function
+        # Quit rectangle
+        click_quit = quit_button(surface)
+        if click_host:
+            host_menu(surface)
+        elif click_join:
+            join_menu(surface)
+        elif click_quit:
+            pygame.quit()
+            sys.exit()
+            
+        pygame.display.update()
         
 
-def host_button(surface, font):
+def host_button(surface):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     GREY = (180, 180, 180)
@@ -36,7 +47,7 @@ def host_button(surface, font):
     host_surface = pygame.Surface((host_rect.width, host_rect.height))
     host_surface.fill(WHITE)
     pygame.draw.rect(host_surface, BLACK, host_surface.get_rect(), 10)
-    host_tourney_text = font.render("Host Tournament", True, BLACK)
+    host_tourney_text = font2.render("Host Tournament", True, BLACK)
     host_text_centre = host_tourney_text.get_rect(center=host_surface.get_rect().center)
     host_surface.blit(host_tourney_text, host_text_centre)
 
@@ -49,7 +60,7 @@ def host_button(surface, font):
     if host_hovering:
         host_surface.fill(GREY)
         pygame.draw.rect(host_surface, BLACK, host_surface.get_rect(), 10)
-        host_tourney_text = font.render("Host Tournament", True, BLACK)
+        host_tourney_text = font2.render("Host Tournament", True, BLACK)
         host_text_centre = host_tourney_text.get_rect(center=host_surface.get_rect().center)
         host_surface.blit(host_tourney_text, host_text_centre)
         if pygame.mouse.get_pressed()[0]:
@@ -58,7 +69,7 @@ def host_button(surface, font):
     surface.blit(host_surface, host_rect)
     return click
     
-def join_button(surface, font):
+def join_button(surface):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     GREY = (180, 180, 180)
@@ -67,7 +78,7 @@ def join_button(surface, font):
     join_surface = pygame.Surface((join_rect.width, join_rect.height))
     join_surface.fill(WHITE)
     pygame.draw.rect(join_surface, BLACK, join_surface.get_rect(), 10)
-    join_tourney_text = font.render("Join Tournament", True, BLACK)
+    join_tourney_text = font2.render("Join Tournament", True, BLACK)
     join_text_centre = join_tourney_text.get_rect(center=join_surface.get_rect().center)
     join_surface.blit(join_tourney_text, join_text_centre)
         
@@ -80,7 +91,7 @@ def join_button(surface, font):
     if join_hovering:
         join_surface.fill(GREY)
         pygame.draw.rect(join_surface, BLACK, join_surface.get_rect(), 10)
-        join_tourney_text = font.render("Join Tournament", True, BLACK)
+        join_tourney_text = font2.render("Join Tournament", True, BLACK)
         join_text_centre = join_tourney_text.get_rect(center=join_surface.get_rect().center)
         join_surface.blit(join_tourney_text, join_text_centre)
         if pygame.mouse.get_pressed()[0]:
@@ -90,7 +101,7 @@ def join_button(surface, font):
     return click
 
 
-def quit_button(surface, font):
+def quit_button(surface):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     GREY = (180, 180, 180)
@@ -99,7 +110,7 @@ def quit_button(surface, font):
     quit_surface = pygame.Surface((quit_rect.width, quit_rect.height))
     quit_surface.fill(WHITE)
     pygame.draw.rect(quit_surface, BLACK, quit_surface.get_rect(), 10)
-    quit_tourney_text = font.render("Quit", True, BLACK)
+    quit_tourney_text = font2.render("Quit", True, BLACK)
     quit_text_centre = quit_tourney_text.get_rect(center=quit_surface.get_rect().center)
     quit_surface.blit(quit_tourney_text, quit_text_centre)
         
@@ -112,7 +123,7 @@ def quit_button(surface, font):
     if quit_hovering:
         quit_surface.fill(GREY)
         pygame.draw.rect(quit_surface, BLACK, quit_surface.get_rect(), 10)
-        quit_tourney_text = font.render("Quit", True, BLACK)
+        quit_tourney_text = font2.render("Quit", True, BLACK)
         quit_text_centre = quit_tourney_text.get_rect(center=quit_surface.get_rect().center)
         quit_surface.blit(quit_tourney_text, quit_text_centre)
         if pygame.mouse.get_pressed()[0]:
@@ -121,16 +132,16 @@ def quit_button(surface, font):
     surface.blit(quit_surface,  quit_rect)
     return click
 
-def back_menu_button(surface, font):
+def back_menu_button(surface):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     GREY = (180, 180, 180)
     click = False
-    back_rect = pygame.Rect(1000, 600, 100, 50)
+    back_rect = pygame.Rect(40, 650, 100, 50)
     back_surface = pygame.Surface((back_rect.width, back_rect.height))
     back_surface.fill(WHITE)
     pygame.draw.rect(back_surface, BLACK, back_surface.get_rect(), 10)
-    back_tourney_text = font.render("Back", True, BLACK)
+    back_tourney_text = font3.render("Back", True, BLACK)
     back_text_centre = back_tourney_text.get_rect(center=back_surface.get_rect().center)
     back_surface.blit(back_tourney_text, back_text_centre)
 
@@ -143,7 +154,7 @@ def back_menu_button(surface, font):
     if back_hovering:
         back_surface.fill(GREY)
         pygame.draw.rect(back_surface, BLACK, back_surface.get_rect(), 10)
-        back_tourney_text = font.render("Back", True, BLACK)
+        back_tourney_text = font3.render("Back", True, BLACK)
         back_text_centre = back_tourney_text.get_rect(center=back_surface.get_rect().center)
         back_surface.blit(back_tourney_text, back_text_centre)
         if pygame.mouse.get_pressed()[0]:
@@ -152,14 +163,14 @@ def back_menu_button(surface, font):
     surface.blit(back_surface, back_rect)
     return click
 
-def host_menu(surface, font):
+def host_menu(surface):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     while True:
 
         surface.fill(WHITE)
 
-        PLAY_TEXT = font.render("Host Menu", True, BLACK)
+        PLAY_TEXT = font1.render("Host Menu", True, BLACK)
         PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 260))
         surface.blit(PLAY_TEXT, PLAY_RECT)
 
@@ -168,30 +179,35 @@ def host_menu(surface, font):
                 pygame.quit()
                 sys.exit()
         
-        click_back = back_menu_button(surface, font)
+        click_back = back_menu_button(surface)
         if click_back:
-            main_menu_screen(surface, font, font1)
+            main_menu_screen(surface)
 
         pygame.display.update()
         
-def join_menu(surface, font):
+def join_menu(surface):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     while True:
 
         surface.fill(WHITE)
 
-        PLAY_TEXT = font.render("Join Menu", True, BLACK)
+        PLAY_TEXT = font1.render("Join Menu", True, BLACK)
         PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 260))
         surface.blit(PLAY_TEXT, PLAY_RECT)
+        # Name input based on amount of players per team
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
+        click_back = back_menu_button(surface)
+        if click_back:
+            main_menu_screen(surface)
+            
         pygame.display.update()
-    
+
 pygame.init()
 pygame.font.init()
 window_width, window_height = 1280, 720
@@ -199,6 +215,7 @@ window_surface = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Tournament Bracket Automation (T.B.A.) - Sponsored by Fortnite")
 font1 = pygame.font.SysFont(None, 111)
 font2 = pygame.font.SysFont(None, 50)
+font3 = pygame.font.SysFont(None, 30)
 running = True
 clock = pygame.time.Clock()
 while running:
@@ -207,7 +224,6 @@ while running:
             running = False
             sys.exit()
     mouse_state = pygame.mouse.get_pressed()
-    main_menu_screen(window_surface, font1, font2)
+    main_menu_screen(window_surface)
     pygame.display.update()
     clock.tick(60)
-
