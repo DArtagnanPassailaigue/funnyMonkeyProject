@@ -1,8 +1,49 @@
 import pygame, sys
-import pygame.locals
-#from button import Button
+from button import Button
+COLOR_INACTIVE = pygame.Color(255,255,255)
+COLOR_ACTIVE = pygame.Color(0,0,0)
 
-textinput = TextInputVisualizer()
+class InputBox:
+
+    def __init__(self, x, y, w, h, text=''):
+        self.rect = pygame.Rect(x, y, w, h)
+        self.color = COLOR_INACTIVE
+        self.text = text
+        self.txt_surface = font2.render(text, True, self.color)
+        self.active = False
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # If the user clicked on the input_box rect.
+            if self.rect.collidepoint(event.pos):
+                # Toggle the active variable.
+                self.active = not self.active
+            else:
+                self.active = False
+            # Change the current color of the input box.
+            self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
+        if event.type == pygame.KEYDOWN:
+            if self.active:
+                if event.key == pygame.K_RETURN:
+                    print(self.text)
+                    self.text = ''
+                elif event.key == pygame.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+                # Re-render the text.
+                self.txt_surface = font2.render(self.text, True, self.color)
+
+    def update(self):
+        # Resize the box if the text is too long.
+        width = max(200, self.txt_surface.get_width()+10)
+        self.rect.w = width
+
+    def draw(self, screen):
+        # Blit the text.
+        screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+        # Blit the rect.
+        pygame.draw.rect(screen, self.color, self.rect, 2)
     
 def main_menu_screen(surface):
     WHITE = (255, 255, 255)
@@ -176,7 +217,7 @@ def host_menu(surface):
         PLAY_TEXT = font1.render("Host Menu", True, BLACK)
         PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 260))
         surface.blit(PLAY_TEXT, PLAY_RECT)
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -199,24 +240,26 @@ def join_menu(surface):
         PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 260))
         surface.blit(PLAY_TEXT, PLAY_RECT)
         # Name input based on amount of players per team
-        while True:
-            surface.fill((225, 225, 225))
+        input_box1 = InputBox(100, 100, 140, 32)
+        input_box2 = InputBox(100, 300, 140, 32)
+        input_boxes = [input_box1, input_box2]
 
-            events = pygame.event.get()
+        for action in pygame.event.get():
+            if action.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            for box in input_boxes:
+                box.handle_event(action)
 
-            # Feed it with events every frame
-            textinput.update(events)
-            # Blit its surface onto the screen
-            surface.blit(textinput.surface, (10, 10))
+        for box in input_boxes:
+            box.update()
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                
-            click_back = back_menu_button(surface)
-            if click_back:
-                main_menu_screen(surface)
+        for box in input_boxes:
+            box.draw(surface)
+        
+        click_back = back_menu_button(surface)
+        if click_back:
+            main_menu_screen(surface)
             
         pygame.display.update()
 

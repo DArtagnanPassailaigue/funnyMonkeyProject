@@ -1,1 +1,2 @@
 https://github.com/baraltech/Menu-System-PyGame.git
+https://github.com/Nearoo/pygame-text-input
