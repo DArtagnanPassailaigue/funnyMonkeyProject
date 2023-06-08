@@ -1,8 +1,5 @@
 import pygame, sys
-import pygame.locals
-#from button import Button
-
-textinput = TextInputVisualizer()
+from button import Button
     
 def main_menu_screen(surface):
     WHITE = (255, 255, 255)
@@ -33,7 +30,7 @@ def main_menu_screen(surface):
         if click_host:
             host_menu(surface)
         elif click_join:
-            join_menu(surface)
+            join_menu(surface, text)
         elif click_quit:
             pygame.quit()
             sys.exit()
@@ -188,37 +185,41 @@ def host_menu(surface):
 
         pygame.display.update()
         
-def join_menu(surface):
+        
+def join_menu(surface, text):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
+    
     while True:
-
         surface.fill(WHITE)
 
         PLAY_TEXT = font1.render("Join Menu", True, BLACK)
-        PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 260))
+        PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 100))
         surface.blit(PLAY_TEXT, PLAY_RECT)
-        # Name input based on amount of players per team
-        while True:
-            surface.fill((225, 225, 225))
 
-            events = pygame.event.get()
+        text_rect = pygame.draw.rect(surface, BLACK, [385, 350, 500, 50], 5)
 
-            # Feed it with events every frame
-            textinput.update(events)
-            # Blit its surface onto the screen
-            surface.blit(textinput.surface, (10, 10))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                elif event.key == pygame.K_BACKSPACE:
+                    text = text[:-1]
+                else:
+                    text += event.unicode
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                
-            click_back = back_menu_button(surface)
-            if click_back:
-                main_menu_screen(surface)
-            
+        click_back = back_menu_button(surface)
+        if click_back:
+            main_menu_screen(surface)
+
+        # Render the text and blit it onto the surface at text_rect position
+        input_text = font2.render(text, True, BLACK)
+        input_rect = input_text.get_rect(center=text_rect.center)
+        surface.blit(input_text, input_rect)
+
         pygame.display.update()
+        
 
 pygame.init()
 pygame.font.init()
@@ -229,6 +230,7 @@ font1 = pygame.font.SysFont(None, 111)
 font2 = pygame.font.SysFont(None, 50)
 font3 = pygame.font.SysFont(None, 30)
 running = True
+text = ""
 clock = pygame.time.Clock()
 while running:
     for event in pygame.event.get():
