@@ -183,82 +183,93 @@ def host_menu(surface):
         if click_back:
             main_menu_screen(surface)
 
-        pygame.display.update()
-        
+        pygame.display.update()    
         
 def join_menu(surface, text):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     GREY = (180, 180, 180)
-    
+    text_editing = False
+    text_rect_height = 325
+    adding_player = False  # Added variable to track if "+ Add Player" button was clicked
+
     while True:
         surface.fill(WHITE)
-
+        click_add, add_hovering = addplayer_button(surface)
         PLAY_TEXT = font1.render("Join Menu", True, BLACK)
         PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 100))
         surface.blit(PLAY_TEXT, PLAY_RECT)
 
-        text_rect = pygame.Rect(385, 350, 500, 50)
+        text_rect = pygame.Rect(400, text_rect_height, 500, 50)
         text_surface = pygame.Surface((text_rect.width, text_rect.height))
         text_surface.fill(WHITE)
         pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 10)
-        text_rect_height = text_rect.height
-        
-        mouse_pos = pygame.mouse.get_pos()
-        if text_rect.collidepoint(mouse_pos):
-            text_hovering = True
-        else:
-            text_hovering = False
 
-        if text_hovering:
+        mouse_pos = pygame.mouse.get_pos()
+        if text_rect.collidepoint(mouse_pos) and not adding_player:
             text_surface.fill(GREY)
             pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 10)
 
-        # Event handling outside the if text_hovering block
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN and text_hovering:
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if text_rect.collidepoint(event.pos) and not adding_player:
+                    text_editing = True
+                elif not text_rect.collidepoint(event.pos):
+                    text_editing = False
+
+                if event.button == pygame.BUTTON_LEFT:  # Check if left mouse button was clicked
+                    if add_hovering:
+                        adding_player = not adding_player  # Toggle the adding_player state
+
+            if event.type == pygame.KEYDOWN and text_editing:
                 if event.key == pygame.K_BACKSPACE:
                     text = text[:-1]
-                elif event.key == pygame.K_RETURN:
-                    join_input_return(text)
-                    text = ""
                 else:
                     text += event.unicode
 
-        # Render the text and blit it onto the surface at text_rect position
+                if event.key == pygame.K_RETURN:
+                    join_input_return(text)
+                    text = ""
+
+        if not adding_player:
+            click_back = back_menu_button(surface)
+            if click_back:
+                main_menu_screen(surface)
+
         input_text = font2.render(text, True, BLACK)
         input_rect = input_text.get_rect(center=text_rect.center)
         surface.blit(text_surface, text_rect)
         surface.blit(input_text, input_rect)
 
         pygame.display.update()
-        
-def join_input_return(text):
-    playerX = text
-    print(playerX)
-    
+
+        if adding_player:
+            addplayer(surface, text_rect_height)
+
+
 def addplayer_button(surface):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     GREY = (180, 180, 180)
     click = False
-    add_rect = pygame.Rect(400, 400, 500, 100)
+    add_rect = pygame.Rect(500, 200, 300, 75)
     add_surface = pygame.Surface((add_rect.width, add_rect.height))
     add_surface.fill(WHITE)
     pygame.draw.rect(add_surface, BLACK, add_surface.get_rect(), 10)
     add_tourney_text = font2.render("+ Add Teammate", True, BLACK)
     add_text_centre = add_tourney_text.get_rect(center=add_surface.get_rect().center)
     add_surface.blit(add_tourney_text, add_text_centre)
-        
+
     mouse_pos = pygame.mouse.get_pos()
     if add_rect.collidepoint(mouse_pos):
         add_hovering = True
     else:
         add_hovering = False
-        
+
     if add_hovering:
         add_surface.fill(GREY)
         pygame.draw.rect(add_surface, BLACK, add_surface.get_rect(), 10)
@@ -267,13 +278,58 @@ def addplayer_button(surface):
         add_surface.blit(add_tourney_text, add_text_centre)
         if pygame.mouse.get_pressed()[0]:
             click = True
-        
-    surface.blit(add_surface, add_rect)
-    return click
 
-def addplayer(height):
-    pass
-    
+    surface.blit(add_surface, add_rect)
+    return click, add_hovering
+
+
+def addplayer(surface, height):
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
+    GREY = (180, 180, 180)
+    text_editing = False
+    text = ""
+    while True:
+        text_rect = pygame.Rect(400, height, 500, 50)
+        text_surface = pygame.Surface((text_rect.width, text_rect.height))
+        text_surface.fill(WHITE)
+        pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 10)
+
+        mouse_pos = pygame.mouse.get_pos()
+        if text_rect.collidepoint(mouse_pos):
+            text_surface.fill(GREY)
+            pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 10)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if text_rect.collidepoint(event.pos):
+                    text_editing = True
+                elif not text_rect.collidepoint(event.pos):
+                    text_editing = False
+
+            if event.type == pygame.KEYDOWN and text_editing:
+                if event.key == pygame.K_BACKSPACE:
+                    text = text[:-1]
+                else:
+                    text += event.unicode
+
+                if event.key == pygame.K_RETURN:
+                    join_input_return(text)
+                    text = ""
+
+        input_text = font2.render(text, True, BLACK)
+        input_rect = input_text.get_rect(center=text_rect.center)
+        surface.blit(text_surface, text_rect)
+        surface.blit(input_text, input_rect)
+        pygame.display.update()
+
+        
+def join_input_return(text):
+    playerX = text
+    print(playerX)
 
 pygame.init()
 pygame.font.init()
