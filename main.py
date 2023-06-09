@@ -30,7 +30,7 @@ def main_menu_screen(surface):
         if click_host:
             host_menu(surface)
         elif click_join:
-            join_menu(surface, text)
+            join_menu(surface, "")
         elif click_quit:
             pygame.quit()
             sys.exit()
@@ -189,6 +189,7 @@ def host_menu(surface):
 def join_menu(surface, text):
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
+    GREY = (180, 180, 180)
     
     while True:
         surface.fill(WHITE)
@@ -197,29 +198,82 @@ def join_menu(surface, text):
         PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 100))
         surface.blit(PLAY_TEXT, PLAY_RECT)
 
-        text_rect = pygame.draw.rect(surface, BLACK, [385, 350, 500, 50], 5)
+        text_rect = pygame.Rect(385, 350, 500, 50)
+        text_surface = pygame.Surface((text_rect.width, text_rect.height))
+        text_surface.fill(WHITE)
+        pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 10)
+        text_rect_height = text_rect.height
+        
+        mouse_pos = pygame.mouse.get_pos()
+        if text_rect.collidepoint(mouse_pos):
+            text_hovering = True
+        else:
+            text_hovering = False
 
+        if text_hovering:
+            text_surface.fill(GREY)
+            pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 10)
+
+        # Event handling outside the if text_hovering block
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                elif event.key == pygame.K_BACKSPACE:
+            if event.type == pygame.KEYDOWN and text_hovering:
+                if event.key == pygame.K_BACKSPACE:
                     text = text[:-1]
+                elif event.key == pygame.K_RETURN:
+                    join_input_return(text)
+                    text = ""
                 else:
                     text += event.unicode
-
-        click_back = back_menu_button(surface)
-        if click_back:
-            main_menu_screen(surface)
 
         # Render the text and blit it onto the surface at text_rect position
         input_text = font2.render(text, True, BLACK)
         input_rect = input_text.get_rect(center=text_rect.center)
+        surface.blit(text_surface, text_rect)
         surface.blit(input_text, input_rect)
 
         pygame.display.update()
         
+def join_input_return(text):
+    playerX = text
+    print(playerX)
+    
+def addplayer_button(surface):
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
+    GREY = (180, 180, 180)
+    click = False
+    add_rect = pygame.Rect(400, 400, 500, 100)
+    add_surface = pygame.Surface((add_rect.width, add_rect.height))
+    add_surface.fill(WHITE)
+    pygame.draw.rect(add_surface, BLACK, add_surface.get_rect(), 10)
+    add_tourney_text = font2.render("+ Add Teammate", True, BLACK)
+    add_text_centre = add_tourney_text.get_rect(center=add_surface.get_rect().center)
+    add_surface.blit(add_tourney_text, add_text_centre)
+        
+    mouse_pos = pygame.mouse.get_pos()
+    if add_rect.collidepoint(mouse_pos):
+        add_hovering = True
+    else:
+        add_hovering = False
+        
+    if add_hovering:
+        add_surface.fill(GREY)
+        pygame.draw.rect(add_surface, BLACK, add_surface.get_rect(), 10)
+        add_tourney_text = font2.render("+ Add Teammate", True, BLACK)
+        add_text_centre = add_tourney_text.get_rect(center=add_surface.get_rect().center)
+        add_surface.blit(add_tourney_text, add_text_centre)
+        if pygame.mouse.get_pressed()[0]:
+            click = True
+        
+    surface.blit(add_surface, add_rect)
+    return click
+
+def addplayer(height):
+    pass
+    
 
 pygame.init()
 pygame.font.init()
