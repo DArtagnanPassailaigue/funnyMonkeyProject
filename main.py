@@ -191,11 +191,9 @@ def join_menu(surface, text):
     GREY = (180, 180, 180)
     text_editing = False
     text_rect_height = 325
-    adding_player = False  # Added variable to track if "+ Add Player" button was clicked
 
     while True:
         surface.fill(WHITE)
-        click_add, add_hovering = addplayer_button(surface)
         PLAY_TEXT = font1.render("Join Menu", True, BLACK)
         PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 100))
         surface.blit(PLAY_TEXT, PLAY_RECT)
@@ -203,12 +201,12 @@ def join_menu(surface, text):
         text_rect = pygame.Rect(400, text_rect_height, 500, 50)
         text_surface = pygame.Surface((text_rect.width, text_rect.height))
         text_surface.fill(WHITE)
-        pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 10)
+        pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 5)
 
         mouse_pos = pygame.mouse.get_pos()
-        if text_rect.collidepoint(mouse_pos) and not adding_player:
+        if text_rect.collidepoint(mouse_pos):
             text_surface.fill(GREY)
-            pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 10)
+            pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 5)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -216,14 +214,10 @@ def join_menu(surface, text):
                 sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if text_rect.collidepoint(event.pos) and not adding_player:
+                if text_rect.collidepoint(event.pos):
                     text_editing = True
                 elif not text_rect.collidepoint(event.pos):
                     text_editing = False
-
-                if event.button == pygame.BUTTON_LEFT:  # Check if left mouse button was clicked
-                    if add_hovering:
-                        adding_player = not adding_player  # Toggle the adding_player state
 
             if event.type == pygame.KEYDOWN and text_editing:
                 if event.key == pygame.K_BACKSPACE:
@@ -231,14 +225,14 @@ def join_menu(surface, text):
                 else:
                     text += event.unicode
 
+            if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     join_input_return(text)
                     text = ""
 
-        if not adding_player:
-            click_back = back_menu_button(surface)
-            if click_back:
-                main_menu_screen(surface)
+        click_back = back_menu_button(surface)
+        if click_back:
+            main_menu_screen(surface)
 
         input_text = font2.render(text, True, BLACK)
         input_rect = input_text.get_rect(center=text_rect.center)
@@ -246,10 +240,6 @@ def join_menu(surface, text):
         surface.blit(input_text, input_rect)
 
         pygame.display.update()
-
-        if adding_player:
-            addplayer(surface, text_rect_height)
-
 
 def addplayer_button(surface):
     WHITE = (255, 255, 255)
@@ -280,7 +270,6 @@ def addplayer_button(surface):
             click = True
 
     surface.blit(add_surface, add_rect)
-    return click, add_hovering
 
 
 def addplayer(surface, height):
@@ -293,12 +282,12 @@ def addplayer(surface, height):
         text_rect = pygame.Rect(400, height, 500, 50)
         text_surface = pygame.Surface((text_rect.width, text_rect.height))
         text_surface.fill(WHITE)
-        pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 10)
+        pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 5)
 
         mouse_pos = pygame.mouse.get_pos()
         if text_rect.collidepoint(mouse_pos):
             text_surface.fill(GREY)
-            pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 10)
+            pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 5)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -325,7 +314,6 @@ def addplayer(surface, height):
         surface.blit(text_surface, text_rect)
         surface.blit(input_text, input_rect)
         pygame.display.update()
-
         
 def join_input_return(text):
     playerX = text
