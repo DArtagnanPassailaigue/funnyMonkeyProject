@@ -191,6 +191,7 @@ def join_menu(surface, text):
     GREY = (180, 180, 180)
     text_editing = False
     text_rect_height = 325
+    boxnum = 0
 
     while True:
         surface.fill(WHITE)
@@ -228,11 +229,19 @@ def join_menu(surface, text):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     join_input_return(text)
+                    CONFIRM_TEXT = font3.render("Player "+ text + " added.", True, BLACK)
+                    CONFIRM_RECT = CONFIRM_TEXT.get_rect(center=(640, 500))
+                    surface.blit(CONFIRM_TEXT, CONFIRM_RECT)
                     text = ""
 
         click_back = back_menu_button(surface)
+        click_add = addplayer_button(surface)
         if click_back:
             main_menu_screen(surface)
+        elif click_add:
+            text_rect_height += 25
+            boxnum += 1
+            addplayer(surface, text_rect_height, boxnum)
 
         input_text = font2.render(text, True, BLACK)
         input_rect = input_text.get_rect(center=text_rect.center)
@@ -242,9 +251,6 @@ def join_menu(surface, text):
         pygame.display.update()
 
 def addplayer_button(surface):
-    WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
-    GREY = (180, 180, 180)
     click = False
     add_rect = pygame.Rect(500, 200, 300, 75)
     add_surface = pygame.Surface((add_rect.width, add_rect.height))
@@ -272,58 +278,34 @@ def addplayer_button(surface):
     surface.blit(add_surface, add_rect)
 
 
-def addplayer(surface, height):
+def addplayer(surface, height, box_num):
+    # come back to this later
+    pass
+    '''
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     GREY = (180, 180, 180)
-    text_editing = False
-    text = ""
+    extra_boxes = []
     while True:
-        text_rect = pygame.Rect(400, height, 500, 50)
-        text_surface = pygame.Surface((text_rect.width, text_rect.height))
-        text_surface.fill(WHITE)
-        pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 5)
-
-        mouse_pos = pygame.mouse.get_pos()
-        if text_rect.collidepoint(mouse_pos):
-            text_surface.fill(GREY)
-            pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 5)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if text_rect.collidepoint(event.pos):
-                    text_editing = True
-                elif not text_rect.collidepoint(event.pos):
-                    text_editing = False
-
-            if event.type == pygame.KEYDOWN and text_editing:
-                if event.key == pygame.K_BACKSPACE:
-                    text = text[:-1]
-                else:
-                    text += event.unicode
-
-                if event.key == pygame.K_RETURN:
-                    join_input_return(text)
-                    text = ""
-
-        input_text = font2.render(text, True, BLACK)
-        input_rect = input_text.get_rect(center=text_rect.center)
-        surface.blit(text_surface, text_rect)
-        surface.blit(input_text, input_rect)
-        pygame.display.update()
+        box_num
+    '''
+            
         
-def join_input_return(text):
+def join_input_return(surface, text):
     playerX = text
     print(playerX)
+    CONFIRM_TEXT = font3.render("Player "+ text + " added.", True, BLACK)
+    CONFIRM_RECT = CONFIRM_TEXT.get_rect(center=(640, 500))
+    surface.blit(CONFIRM_TEXT, CONFIRM_RECT)
 
 pygame.init()
 pygame.font.init()
 window_width, window_height = 1280, 720
 window_surface = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Tournament Bracket Automation (T.B.A.) - Sponsored by Fortnite")
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREY = (180, 180, 180)
 font1 = pygame.font.SysFont(None, 111)
 font2 = pygame.font.SysFont(None, 50)
 font3 = pygame.font.SysFont(None, 30)
