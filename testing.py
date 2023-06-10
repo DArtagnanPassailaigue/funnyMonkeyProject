@@ -1,17 +1,22 @@
-import os
-print(os.getcwd()) # gets the Current Working Directory
-folder = os.getcwd()
-for i in range(1):
-        # Team File Creation 
-        listData = input("hi:")
-        listData2 = input("why:")
-        listData3 = input("NO!")
-        fileName = folder + f"team{i}.txt"
-        file = open(fileName,"w")
-        print(file)     
-        file.writelines(listData)
-        file.writelines("\n")
-        file.writelines(listData2)
-        file.writelines("\n")
-        file.writelines(listData)
-        file.close  
+import random
+teamFile = ["Team1", "Team2", "Team3", "Team4", "Team5", "Team6"]
+random.shuffle(teamFile)
+print(teamFile)
+if len(teamFile) % 2:
+    teamFile.append('Day off')
+n = int(len(teamFile))
+matchs = []
+fixtures = []
+return_matchs = []
+for fixture in range(1, n):
+    for i in range(n/2):
+        matchs.append((teamFile[i], teamFile[n - 1 - i]))
+        return_matchs.append((teamFile[n - 1 - i], teamFile[i]))
+    teamFile.insert(1, teamFile.pop())
+    fixtures.insert(len(fixtures)/2, matchs)
+    fixtures.append(return_matchs)
+    matchs = []
+    return_matchs = []
+
+for fixture in fixtures:
+    print (fixture)

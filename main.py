@@ -5,7 +5,7 @@ folder = os.getcwd()
 
 def braketChecker():
     n = 1
-    teamX= int(input("How many teams? "))
+    teamX = int(input("How many teams? "))
     while (teamX != n):
         if (2**n == teamX):
             return teamX
@@ -39,7 +39,7 @@ def fileMaker(teamNum,nInTeams,nameType):
         list.append(TeamName)
     return list
 def matchType():
-    gameType = input("Solo, Pairs, Teams: ").lower()
+    gameType = input("Solo, Pairs, or Teams: ").lower()
     if gameType == "solo":        
         teamNum = braketChecker()
         print(teamNum)
