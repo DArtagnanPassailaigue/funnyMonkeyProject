@@ -229,10 +229,13 @@ def join_menu(surface, text):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     join_input_return(text)
-                    CONFIRM_TEXT = font3.render("Player "+ text + " added.", True, BLACK)
-                    CONFIRM_RECT = CONFIRM_TEXT.get_rect(center=(640, 500))
+                    CONFIRM_TEXT = font3.render("Player " + text + " added.", True, BLACK)
+                    CONFIRM_RECT = CONFIRM_TEXT.get_rect(center=(640, 700))
                     surface.blit(CONFIRM_TEXT, CONFIRM_RECT)
-                    text = ""
+                    pygame.display.update()
+                    pygame.time.delay(2000)  # Delay in milliseconds
+                    surface.fill(WHITE)
+                    #upon revamping the button functions, add a back button and add player button here
 
         click_back = back_menu_button(surface)
         click_add = addplayer_button(surface)
@@ -291,12 +294,10 @@ def addplayer(surface, height, box_num):
     '''
             
         
-def join_input_return(surface, text):
+def join_input_return(text):
     playerX = text
     print(playerX)
-    CONFIRM_TEXT = font3.render("Player "+ text + " added.", True, BLACK)
-    CONFIRM_RECT = CONFIRM_TEXT.get_rect(center=(640, 500))
-    surface.blit(CONFIRM_TEXT, CONFIRM_RECT)
+    # ruban's player input code will go here
 
 pygame.init()
 pygame.font.init()
