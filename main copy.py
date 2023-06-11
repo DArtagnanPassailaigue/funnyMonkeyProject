@@ -64,7 +64,6 @@ def button(surface, xheight, yheight, xlength, ylength, buttontext):
     return click
 
 def host_menu(surface, teams):
-    teams = teams * 2
     while True:
 
         surface.fill(WHITE)
