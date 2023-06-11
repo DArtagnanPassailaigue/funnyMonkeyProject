@@ -1,6 +1,7 @@
 import pygame, sys
 import math
-    
+import random
+import os
 def main_menu(surface, teams):
     while True:
 
@@ -73,6 +74,7 @@ def host_menu(surface, teams):
         PLAY_RECT = PLAY_TEXT.get_rect(center=(100, 25))
         surface.blit(PLAY_TEXT, PLAY_RECT)
         
+        random.shuffle(player_list)
         draw_bracket(surface, teams, window_width // 2, 0, window_height, window_width // 2 - 100)
         
         for event in pygame.event.get():
@@ -98,10 +100,15 @@ def draw_bracket(surface, teams, top_x, top_y, height, width):
         draw_bracket(surface, teams // 2, top_x + half_width, top_y + level_height, height - level_height, half_width)  # Adjust top_y here
 
         pygame.draw.line(surface, BLACK, (top_x, top_y), (top_x, top_y + level_height//2), 2)
-        button(surface, top_x - 10, top_y + level_height//2, 20, level_height//2 + 2, "PLACEHOLDER")
+        if len(player_list) % 2:
+                player_list.append('No entrant')
+        for i in range(len(player_list)):
+            button(surface, top_x - 10, top_y + level_height//2, 100, level_height//2 + 2, player_list[i])
+                #upon opening and closing the host menu, the amount of brackets doubles. fix pls
+                #also, upon entering a name in join menu and going into host menu, the box rapidly switches between the name and "no entrant"
     else:
         pygame.draw.line(surface, BLACK, (top_x, top_y), (top_x, top_y + height//2), 2)
-        button(surface, top_x - 10, top_y + height//2, 20, height//2 + 2, "PLACEHOLDER")
+        button(surface, top_x - 10, top_y + height//2, 100, height//2 + 2, "No Participants ")
 
 def next_power_of_2(n):
     return 2 ** math.ceil(math.log2(n))
@@ -188,15 +195,20 @@ def addplayer(surface, height, box_num):
             
         
 def join_input_return(text):
-    playerX = text
-    print(playerX)
-    # ruban's player input code will go here
+    player_list.append(text)
+    fileName = folder + "players.csv"
+    file = open(fileName,"a")    
+    file.writelines("text")
+    file.close  
+    #make it so that the function will only add a name once it scans the file and sees that the name does not already exist
+    #also make it so that on "win", the player.csv file is searched and the program appends ",Wins:(number of total wins)" next to the player's name
 
 pygame.init()
 pygame.font.init()
 window_width, window_height = 1280, 720
 window_surface = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Tournament Bracket Automation (T.B.A.) - Sponsored by Fortnite")
+folder = os.getcwd()
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREY = (180, 180, 180)
@@ -205,6 +217,7 @@ font2 = pygame.font.SysFont(None, 50)
 font3 = pygame.font.SysFont(None, 30)
 running = True
 text = ""
+player_list = []
 teams = 0
 clock = pygame.time.Clock()
 while running:
