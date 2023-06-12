@@ -101,7 +101,7 @@ def draw_bracket(surface, teams, top_x, top_y, height, width):
 
         pygame.draw.line(surface, BLACK, (top_x, top_y), (top_x, top_y + level_height//2), 2)
         if len(player_list) % 2:
-                player_list.append('No entrant')
+                player_list.append('No entrant')  
         for i in range(len(player_list)):
             button(surface, top_x - 10, top_y + level_height//2, 100, level_height//2 + 2, player_list[i])
                 #upon opening and closing the host menu, the amount of brackets doubles. fix pls
