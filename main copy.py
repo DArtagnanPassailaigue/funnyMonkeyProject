@@ -123,45 +123,8 @@ def join_menu(surface, text, teams):
         PLAY_TEXT = font1.render("Join Menu", True, BLACK)
         PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 100))
         surface.blit(PLAY_TEXT, PLAY_RECT)
-            
-        text_rect = pygame.Rect(400, text_rect_height, 500, 50)
-        text_surface = pygame.Surface((text_rect.width, text_rect.height))
-        text_surface.fill(WHITE)
-        pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 5)
-
-        mouse_pos = pygame.mouse.get_pos()
-        if text_rect.collidepoint(mouse_pos):
-            text_surface.fill(GREY)
-            pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 5)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if text_rect.collidepoint(event.pos):
-                    text_editing = True
-                elif not text_rect.collidepoint(event.pos):
-                    text_editing = False
-
-            if event.type == pygame.KEYDOWN and text_editing:
-                if event.key == pygame.K_BACKSPACE:
-                    text = text[:-1]
-                else:
-                    text += event.unicode
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    join_input_return(text)
-                    CONFIRM_TEXT = font2.render("Player " + text + " added.", True, BLACK)
-                    CONFIRM_RECT = CONFIRM_TEXT.get_rect(center=(640, 200))
-                    surface.blit(CONFIRM_TEXT, CONFIRM_RECT)
-                    text = ""
-                    teams += 1
-                    pygame.display.update()
-                    pygame.time.delay(2000)  # Delay in milliseconds
-                    surface.fill(WHITE)
+        
+        textbox(surface, 325)
 
         click_back = button(surface, 40, 650, 100, 50, "Back")
         click_add = button(surface, 500, 200, 300, 75, "+ Add Player")
@@ -169,16 +132,69 @@ def join_menu(surface, text, teams):
             main_menu(surface, teams)
         elif click_add:
             add_player_clicks += 1
-            addplayer(surface, text_rect_height, boxnum)  # Pass player_boxes as a parameter
-
-        input_text = font2.render(text, True, BLACK)
-        input_rect = input_text.get_rect(center=text_rect.center)
-        surface.blit(text_surface, text_rect)
-        surface.blit(input_text, input_rect)
+            if add_player_clicks == 1:
+                textbox(surface, 375)
+            elif add_player_clicks == 3:
+                textbox(surface, 425)
+            elif add_player_clicks == 4:
+                textbox(surface, 475)
+            elif add_player_clicks == 5:
+                textbox(surface, 525)
+            elif add_player_clicks == 6:
+                textbox(surface, 575)
+            elif add_player_clicks == 7:
+                textbox(surface, 625)
+            elif add_player_clicks == 8:
+                textbox(surface, 675)
 
         pygame.display.update()
 
-def textbox(surface, height)
+def textbox(surface, height, text):
+    text_rect = pygame.Rect(400, height, 500, 50)
+    text_surface = pygame.Surface((text_rect.width, text_rect.height))
+    text_surface.fill(WHITE)
+    pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 5)
+
+    mouse_pos = pygame.mouse.get_pos()
+    if text_rect.collidepoint(mouse_pos):
+        text_surface.fill(GREY)
+        pygame.draw.rect(text_surface, BLACK, text_surface.get_rect(), 5)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if text_rect.collidepoint(event.pos):
+                text_editing = True
+            elif not text_rect.collidepoint(event.pos):
+                text_editing = False
+
+        if event.type == pygame.KEYDOWN and text_editing:
+            if event.key == pygame.K_BACKSPACE:
+                text = text[:-1]
+            else:
+                text += event.unicode
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                join_input_return(text)
+                CONFIRM_TEXT = font2.render("Player " + text + " added.", True, BLACK)
+                CONFIRM_RECT = CONFIRM_TEXT.get_rect(center=(640, 200))
+                surface.blit(CONFIRM_TEXT, CONFIRM_RECT)
+                text = ""
+                teams += 1
+                pygame.display.update()
+                pygame.time.delay(2000)  # Delay in milliseconds
+                surface.fill(WHITE)
+                
+    input_text = font2.render(text, True, BLACK)
+    input_rect = input_text.get_rect(center=text_rect.center)
+    surface.blit(text_surface, text_rect)
+    surface.blit(input_text, input_rect)
+    
+    pygame.display.update()
         
 def join_input_return(text):
     player_list.append(text)
