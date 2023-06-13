@@ -1,6 +1,5 @@
 import pygame, sys
 import math
-
 import random
 import os
 def main_menu(surface, teams):
