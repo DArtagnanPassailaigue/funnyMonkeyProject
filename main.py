@@ -61,6 +61,7 @@ def button(surface, xheight, yheight, xlength, ylength, buttontext):
         
     surface.blit(button_surface, button_rect)
     return click
+
 def host_menu(surface, teams):
     teams = teams * 2
     while True:
@@ -80,6 +81,7 @@ def host_menu(surface, teams):
         if click_back:
             main_menu(surface, teams)
         pygame.display.update()    
+        
 def draw_bracket(surface, teams, top_x, top_y, height, width):
     if teams > 1:
         level_height = height // int(math.log2(teams))
@@ -92,13 +94,12 @@ def draw_bracket(surface, teams, top_x, top_y, height, width):
 
         pygame.draw.line(surface, BLACK, (top_x, top_y), (top_x, top_y + level_height//2), 2)
         button(surface, top_x - 10, top_y + level_height//2, 20, level_height//2 + 2, "PLACEHOLDER")
-        for i in range(len(player_list)):
-            button(surface, top_x - 10, top_y + level_height//2, 100, level_height//2 + 2, player_list[i])
-                #upon opening and closing the host menu, the amount of brackets doubles. fix pls
-                #also, upon entering a name in join menu and going into host menu, the box rapidly switches between the name and "no entrant"
+        while True:
+            for i in range(len(player_list)):
+                button(surface, top_x - 10, top_y + level_height//2, 100, level_height//2 + 2, player_list[i])
+
     else:
         pygame.draw.line(surface, BLACK, (top_x, top_y), (top_x, top_y + height//2), 2)
-        button(surface, top_x - 10, top_y + height//2, 20, height//2 + 2, "PLACEHOLDER")
         button(surface, top_x - 10, top_y + height//2, 100, height//2 + 2, "No Participants ")
 
 def next_power_of_2(n):
