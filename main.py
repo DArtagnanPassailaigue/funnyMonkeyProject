@@ -1,9 +1,12 @@
 import pygame, sys
 import math
+import random
 import os
+# importing the necessary packages
 def main_menu(surface, teams):
+    '''Displays the main menu and manages access to the other functions through calling the "button()" function'''
     while True:
-
+        # The graphic for the title screen, including the title and border design
         surface.fill(WHITE)
         menu_text = font1.render("Tournament Bracket Automation", True, BLACK)
         pygame.draw.rect(surface, BLACK, [0, 0, 1280, 720], 15)
@@ -11,18 +14,20 @@ def main_menu(surface, teams):
         pygame.draw.rect(surface, BLACK, [1230, 0, 50, 50], 10)
         pygame.draw.rect(surface, BLACK, [0, 670, 50, 50], 10)
         pygame.draw.rect(surface, BLACK, [1230, 670, 50, 50], 10)
-        surface.blit(menu_text, (37, 100))
-        
+        surface.blit(menu_text, (37, 100)) #confirms the assigned rectangles to be drawn to the surface
+        # for loop that handles if the window is closed during this process
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        # Host rectangle 
+                
+        # Defining the host button as a variable
         click_host = button(surface, 400, 250, 500, 100, "Host Tournament")  # Assign the menu state returned by the function
-        # Join rectangle
+        # Defining the join button as a variable
         click_join = button(surface, 400, 400, 500, 100, "Join Tournament")  # Assign the menu state returned by the function
-        # Quit rectangle
+        # Defining the quit button as a variable
         click_quit = button(surface, 530, 550, 250, 75, "Quit")
+        # The button function becomes "true" when it's button is clicked, meaning that if it becomes true, the below code will run for the respective button clicked
         if click_host:
             host_menu(surface, teams)
         elif click_join:
@@ -30,26 +35,29 @@ def main_menu(surface, teams):
         elif click_quit:
             pygame.quit()
             sys.exit()
-            
+        # updates the display each run of the loop
         pygame.display.update()
     
 def button(surface, xheight, yheight, xlength, ylength, buttontext):
-    click = False
-    button_rect = pygame.Rect(xheight, yheight, xlength, ylength)
-    button_surface = pygame.Surface((button_rect.size))
-    button_surface.fill(WHITE)
-    pygame.draw.rect(button_surface, BLACK, button_surface.get_rect(), 5) #change the button thickness later
-    button_tourney_text = font2.render(str(buttontext), True, BLACK)
-    button_text_centre = button_tourney_text.get_rect(center=button_surface.get_rect().center)
+    '''General function used for displaying the graphics for every button used and for detecting when the button is clicked'''
+    click = False # sets click to False by default
+    button_rect = pygame.Rect(xheight, yheight, xlength, ylength) #takes the given coordiantes in the function call
+    button_surface = pygame.Surface((button_rect.size)) #finds the surface the button will occupy based on the provided coordinates
+    button_surface.fill(WHITE) # fills exclusively the button surface with the colour white
+    pygame.draw.rect(button_surface, BLACK, button_surface.get_rect(), 5) # draws a rectangle based on the size of the button surface and states the thickness of the border
+    button_tourney_text = font2.render(str(buttontext), True, BLACK) # renders the button's provided text in the function call in "font 2", defined at the bottom of the code
+    button_text_centre = button_tourney_text.get_rect(center=button_surface.get_rect().center) # centers the text onto the button
     button_surface.blit(button_tourney_text, button_text_centre)
         
-    mouse_pos = pygame.mouse.get_pos()
+    mouse_pos = pygame.mouse.get_pos() # constantly keeps track of the user's mouse
+    # detects if the mouse is hovering over the button or not
     if button_rect.collidepoint(mouse_pos):
-        button_hovering = True
+        button_hovering = True 
     else:
         button_hovering = False
          
-    if button_hovering:
+    if button_hovering: # creates the effect of greying out the button when the user hovers over it
+        # This is useful for the user to keep track of the location of their mouse without much effort
         button_surface.fill(GREY)
         pygame.draw.rect(button_surface, BLACK, button_surface.get_rect(), 2) # change the button thickness later
         button_tourney_text = font2.render(str(buttontext), True, BLACK)
@@ -57,19 +65,20 @@ def button(surface, xheight, yheight, xlength, ylength, buttontext):
         button_surface.blit(button_tourney_text, button_text_centre)
         if pygame.mouse.get_pressed()[0]:
             click = True
+            # if the mouse is hovering and clicked, click is set to true for the button
         
     surface.blit(button_surface, button_rect)
-    return click
+    return click # return the boolean value of click
 def host_menu(surface, teams):
-    teams = teams * 2
+    '''The menu that provides access to the tournament bracket, the main purpose of the program'''
+    teams = teams * 2 # the "draw_bracket()" function divides the teams for an unknown reason, so this is here as a countermeasure
     while True:
         surface.fill(WHITE)
+        # writes the host menu title text
         PLAY_TEXT = font2.render("Host Menu", True, BLACK)
         PLAY_RECT = PLAY_TEXT.get_rect(center=(100, 25))
         surface.blit(PLAY_TEXT, PLAY_RECT)
-
         draw_bracket(surface, teams, window_width // 2, 0, window_height, window_width // 2 - 100)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -80,7 +89,6 @@ def host_menu(surface, teams):
             main_menu(surface, teams)
         pygame.display.update()    
 def draw_bracket(surface, teams, top_x, top_y, height, width):
-    text_editing = False
     if teams > 1:
         level_height = height // int(math.log2(teams))
         half_width = width // 2
@@ -89,21 +97,20 @@ def draw_bracket(surface, teams, top_x, top_y, height, width):
         
         draw_bracket(surface, teams // 2, top_x - half_width, top_y + level_height, height - level_height, half_width)  # Adjust top_y here
         draw_bracket(surface, teams // 2, top_x + half_width, top_y + level_height, height - level_height, half_width)  # Adjust top_y here
-
         pygame.draw.line(surface, BLACK, (top_x, top_y), (top_x, top_y + level_height//2), 2)
         button(surface, top_x - 10, top_y + level_height//2, 20, level_height//2 + 2, "PLACEHOLDER")
-        while True:
-            for i in range(len(player_list)):
-                button(surface, top_x - 10, top_y + level_height//2, 100, level_height//2 + 2, player_list[i])
-                
+        for i in range(len(player_list)):
+            button(surface, top_x - 10, top_y + level_height//2, 100, level_height//2 + 2, player_list[i])
+                #upon opening and closing the host menu, the amount of brackets doubles. fix pls
+                #also, upon entering a name in join menu and going into host menu, the box rapidly switches between the name and "no entrant"
     else:
         pygame.draw.line(surface, BLACK, (top_x, top_y), (top_x, top_y + height//2), 2)
+        button(surface, top_x - 10, top_y + height//2, 20, height//2 + 2, "PLACEHOLDER")
         button(surface, top_x - 10, top_y + height//2, 100, height//2 + 2, "No Participants ")
-
 def next_power_of_2(n):
     return 2 ** math.ceil(math.log2(n))
-
 def join_menu(surface, text_1, text_2, text_3, text_4, text_5, text_6, teams):
+    '''The menu that allows the names of the players on each team to be input, and counts the amount of teams participating'''
     text_editing_1 = False
     text_editing_2 = False
     text_editing_3 = False
@@ -292,8 +299,8 @@ def join_menu(surface, text_1, text_2, text_3, text_4, text_5, text_6, teams):
         surface.blit(text_surface_6, text_rect_6)
         surface.blit(input_text_6, input_rect_6)
         pygame.display.update()
-
 def join_input_return(text):
+    '''Appends each team to the general list used in host_menu(), and makes a file for each of them'''
     teamX = text
     print(teamX)
     # ruban's player input code will go here
@@ -304,7 +311,6 @@ def join_input_return(text):
     file.close  
     #make it so that the function will only add a name once it scans the file and sees that the name does not already exist
     #also make it so that on "win", the player.csv file is searched and the program appends ",Wins:(number of total wins)" next to the player's name
-
 pygame.init()
 pygame.font.init()
 window_width, window_height = 1280, 720
