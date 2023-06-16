@@ -93,24 +93,36 @@ def host_menu(surface, teams):
         pygame.display.update()  
           
 def draw_bracket(surface, teams, top_x, top_y, height, width):
-    if teams > 1:
-        level_height = height // int(math.log2(teams))
-        half_width = width // 2
+    '''This function draws a tournament bracket recursively.'''
+    # `teams` is the total number of teams in the tournament, `top_x` and `top_y` are the top left coordinates 
+    # of the bracket, `height` is the total height of the bracket, and `width` is the total width of the bracket.
+    if teams > 1: # Check if there is more than one team left in this bracket
+        level_height = height // int(math.log2(teams)) # Calculate the height of one level in the bracket
+        half_width = width // 2 # Calculate the half width of the bracket
+
+        # Draw the upper and lower horizontal lines of the bracket
         pygame.draw.line(surface, BLACK, (top_x, top_y + level_height), (top_x - half_width, top_y + level_height), 2)
         pygame.draw.line(surface, BLACK, (top_x, top_y + level_height), (top_x + half_width, top_y + level_height), 2)
         
-        draw_bracket(surface, teams // 2, top_x - half_width, top_y + level_height, height - level_height, half_width)  # Adjust top_y here
-        draw_bracket(surface, teams // 2, top_x + half_width, top_y + level_height, height - level_height, half_width)  # Adjust top_y here
+        # Recursively draw the left and right half of the bracket
+        draw_bracket(surface, teams // 2, top_x - half_width, top_y + level_height, height - level_height, half_width)  
+        draw_bracket(surface, teams // 2, top_x + half_width, top_y + level_height, height - level_height, half_width)
+        # Draw the vertical line of the bracket
         pygame.draw.line(surface, BLACK, (top_x, top_y), (top_x, top_y + level_height//2), 2)
-        button(surface, top_x - 10, top_y + level_height//2, 20, level_height//2 + 2, "PLACEHOLDER")
+            
+        # Draw buttons for each player
         for i in range(len(player_list)):
             button(surface, top_x - 10, top_y + level_height//2, 100, level_height//2 + 2, player_list[i])
-    else:
+            
+    else: # If there's only one or zero team left in this bracket
+        # Draw the vertical line of the bracket
         pygame.draw.line(surface, BLACK, (top_x, top_y), (top_x, top_y + height//2), 2)
-        button(surface, top_x - 10, top_y + height//2, 20, height//2 + 2, "PLACEHOLDER")
+        # Draw the button for the team or "No Participants" if there's no team
         button(surface, top_x - 10, top_y + height//2, 100, height//2 + 2, "No Participants ")
-        
+
 def next_power_of_2(n):
+    '''This function calculates the next power of 2 greater than or equal to n. '''
+    # This is useful to determine the number of rounds in a tournament, as each round halves the number of teams.
     return 2 ** math.ceil(math.log2(n))
 
 def join_menu(surface, text_1, text_2, text_3, text_4, text_5, text_6, teams):
@@ -332,7 +344,7 @@ def join_input_return(text):
     # creates a file named "players.csv" and appends each team to it
     fileName = folder + "/players.csv" 
     file = open(fileName,"a")    
-    file.writelines(text)
+    file.writelines(text[0] + "," + text[1] + "," + text[2] + "," + text[3] + "," + text[4] + "," + text[5])
     file.close  
 # initiates pygame
 pygame.init()
