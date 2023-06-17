@@ -4,6 +4,7 @@ print(os.getcwd()) # gets the Current Working Directory
 folder = os.getcwd()
 
 def braketChecker():
+    '''This function asks for the ammont of teams and make sure it works with the ideal team formula, 2^X'''
     n = 1
     teamX = int(input("How many teams? "))
     while (teamX != n):
@@ -20,12 +21,13 @@ def braketChecker():
         else:
             print("KiLl mE")
 def fileMaker(teamNum,nInTeams,nameType):
+    '''This function makes team files which store team names, member names, and affiliation'''
     list = [] 
     for i in range(teamNum):
         # Team File Creation 
-        TeamName = input(f"{nameType} #{i} name:")
+        TeamName = input(f"{nameType} #{i} name:")  #ever since i learned about f literal strings I've been using them a lot
         affil = input("affiliation: ")
-        fileName = folder + f"team {i} {TeamName}.txt"
+        fileName = folder + f"team {i} {TeamName}.txt" #like ALOT
         file = open(fileName,"w")
         print(file)     
         file.writelines(f"{nameType} name:{TeamName}\n")
@@ -39,13 +41,14 @@ def fileMaker(teamNum,nInTeams,nameType):
         list.append(TeamName)
     return list
 def matchType():
+    ''' This function asks the user what kind of game they'd like to play and sets variable as such'''
     gameType = input("Solo, Pairs, or Teams: ").lower()
     if gameType == "solo":        
-        teamNum = braketChecker()
+        teamNum = braketChecker() # asks for number of teams
         print(teamNum)
-        nInTeams = 1
-        nameType = "Perfered"
-        teamFile = fileMaker(teamNum,nInTeams,nameType)
+        nInTeams = 1    # number of people in a team
+        nameType = "Perfered"   #  proper grammar
+        teamFile = fileMaker(teamNum,nInTeams,nameType) # creates file
     elif (gameType == "pairs") or (gameType == "pair"):
         teamNum = braketChecker()
         print(teamNum)
@@ -66,7 +69,9 @@ def matchType():
         seeding(teamFile, teamNum)
     elif teamNum == 2:
         print(teamFile)
-def nest_list(teamFile,rows, columns):    
+
+def nest_list(teamFile,rows, columns):  
+    ''' This function makes four list in side the list, making it easier to check for duplicates'''
     result=[]               
     start = 0
     end = columns
@@ -76,9 +81,12 @@ def nest_list(teamFile,rows, columns):
         end += columns
     return result    
 def seeding(teamFile,teamNum):
-    nOfDivision = teamNum//4
+    ''' This fuction does the actual seeding [incomplete]'''
+    nOfDivision = teamNum//4 #divides the amount of teams by 4
     print(nOfDivision)
-    random.shuffle(teamFile)
+    random.shuffle(teamFile) # shuffles teams 
     division=nest_list(teamFile,4,nOfDivision)
     print(division)
+
+# actual call of the function
 matchType()
