@@ -25,7 +25,7 @@ def fileMaker(teamNum,nInTeams,nameType):
         # Team File Creation 
         TeamName = input(f"{nameType} #{i} name:")
         affil = input("affiliation: ")
-        fileName = folder + f"team {i, TeamName}.txt"
+        fileName = folder + f"team {i} {TeamName}.txt"
         file = open(fileName,"w")
         print(file)     
         file.writelines(f"{nameType} name:{TeamName}\n")
@@ -79,7 +79,6 @@ def seeding(teamFile,teamNum):
     nOfDivision = teamNum//4
     print(nOfDivision)
     random.shuffle(teamFile)
-   # teamFile=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     division=nest_list(teamFile,4,nOfDivision)
     print(division)
 matchType()
